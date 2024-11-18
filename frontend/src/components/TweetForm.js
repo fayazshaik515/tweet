@@ -8,6 +8,8 @@ function TweetForm({ onTweetPosted }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate tweet content
     if (!content.trim()) {
       setError("Tweet cannot be empty");
       return;
@@ -34,13 +36,17 @@ function TweetForm({ onTweetPosted }) {
         throw new Error(data.error || "Failed to post tweet");
       }
 
+      const newTweet = await response.json(); // Parse the newly created tweet from the response
+
       setContent("");
       setError("");
+
+      // Call the onTweetPosted callback and pass the new tweet
       if (onTweetPosted) {
-        onTweetPosted();
+        onTweetPosted(newTweet);
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }

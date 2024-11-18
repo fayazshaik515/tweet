@@ -26,9 +26,9 @@ public class TweetController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTweet(
-        @RequestBody TweetRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
+    public ResponseEntity<?> createTweet( @RequestBody TweetRequest request,
+    // information about the currently authenticated (logged-in) user.
+     @AuthenticationPrincipal UserDetails userDetails
     ) {
         try {
             Tweet tweet = tweetService.createTweet(

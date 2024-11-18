@@ -38,8 +38,8 @@ public class TweetService {
     }
 
     public Page<Tweet> getTweets(int page, int size) {
-        if (size > 50) {
-            size = 50; // Limit maximum page size
+        if (size >20) {
+            size = 10; // Limit maximum page size
         }
         return tweetRepository.findAllByOrderByTimestampDesc(
             PageRequest.of(page, size)
@@ -50,8 +50,8 @@ public class TweetService {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new RuntimeException("User not found"));
             
-        if (size > 50) {
-            size = 50; // Limit maximum page size
+        if (size > 20) {
+            size = 10; // Limit maximum page size
         }
         return tweetRepository.findByUserOrderByTimestampDesc(
             user,
