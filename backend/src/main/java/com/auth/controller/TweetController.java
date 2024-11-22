@@ -1,10 +1,14 @@
 package com.auth.controller;
 
 import com.auth.model.Tweet;
+import com.auth.model.User;
 import com.auth.service.TweetService;
+// import com.auth.service.UserCacheService;
+
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +23,9 @@ public class TweetController {
     
     @Autowired
     private TweetService tweetService;
+    // @Autowired
+    // private UserCacheService userCacheService;
+
 
     @Data
     public static class TweetRequest {
@@ -53,18 +60,13 @@ public class TweetController {
         return ResponseEntity.ok(tweetService.getTweets(page, size));
     }
 
-    @GetMapping("/user/{username}")
-    public ResponseEntity<?> getUserTweets(
-        @PathVariable String username,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
-    ) {
-        try {
-            Page<Tweet> tweets = tweetService.getUserTweets(username, page, size);
-            return ResponseEntity.ok(tweets);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
-                .body(Map.of("error", e.getMessage()));
-        }
+
+@GetMapping("/users/{username}")
+public ResponseEntity<?> getUserWithTweets(@PathVariable String username) {
+    User user = tweetService.findUserWithTweets(username);
+    if (user == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
     }
+    return ResponseEntity.ok(user); // Return user with tweets
+}
 }

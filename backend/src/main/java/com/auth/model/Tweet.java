@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -24,5 +27,11 @@ public class Tweet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference  // Do not serialize this side of the relationshi
     private User user;
+    @Override
+public String toString() {
+    return "Tweet{id=" + id + ", content='" + content + "', timestamp=" + timestamp + "}";
+}
+
 }
